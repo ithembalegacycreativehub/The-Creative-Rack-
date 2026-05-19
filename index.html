@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="The Creative Rack is a public discovery platform for African fashion designers, stylists, and visual artists." />
+  <title>The Creative Rack | Where African Creative Work Gets Seen</title>
+  <link rel="stylesheet" href="assets/css/style.css" />
+</head>
+<body>
+  <header class="site-header" id="top">
+    <div class="container nav-wrap">
+      <a class="brand" href="#home" aria-label="The Creative Rack home">
+        <span class="brand-mark">CR</span>
+        <span><strong>The Creative Rack</strong><small>Creative discovery platform</small></span>
+      </a>
+      <button class="menu-toggle" id="menuToggle" type="button" aria-label="Open menu" aria-expanded="false"><span></span><span></span><span></span></button>
+      <nav class="site-nav" id="siteNav" aria-label="Primary navigation">
+        <a href="#home">Home</a>
+        <a href="#explore">Explore Creatives</a>
+        <a href="#fashion-designers">Fashion Designers</a>
+        <a href="#stylists">Stylists</a>
+        <a href="#visual-artists">Visual Artists</a>
+        <a href="#events">Events</a>
+        <a href="#about">About</a>
+        <a href="#join">Join the Platform</a>
+        <a href="#contact">Contact</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero" id="home">
+      <div class="hero-media"><img src="assets/images/hero-modern-african-editorial.png" alt="Editorial African creative portrait" /></div>
+      <div class="container hero-content">
+        <p class="eyebrow">Public creative access platform</p>
+        <h1>The Creative Rack</h1>
+        <h2>Where African Creative Work Gets Seen</h2>
+        <p class="hero-copy">Discover fashion designers, stylists, and visual artists shaping culture through original work, visual storytelling, and creative expression.</p>
+        <div class="hero-actions">
+          <a class="btn primary" href="#explore">Explore Creatives</a>
+          <a class="btn secondary" href="#join">Join the Platform</a>
+          <a class="btn ghost" href="#events">View Upcoming Events</a>
+        </div>
+        <div class="hero-stats" aria-label="Platform highlights">
+          <span><strong id="statCreatives">0</strong> Creatives</span>
+          <span><strong>3</strong> Core Categories</span>
+          <span><strong id="statEvents">0</strong> Upcoming Events</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="section intro-band" id="about">
+      <div class="container split">
+        <div>
+          <p class="eyebrow">Visibility, culture, collaboration</p>
+          <h2>A public home for creative work, stories, and future opportunity.</h2>
+        </div>
+        <p>The Creative Rack helps audiences, brands, collaborators, and communities access the work of emerging and established creatives. V1 is focused on credible discovery: portfolios, creative stories, locations, specialties, socials, events, and community visibility.</p>
+      </div>
+    </section>
+
+    <section class="section" id="categories">
+      <div class="container">
+        <div class="section-head">
+          <p class="eyebrow">Creative categories</p>
+          <h2>Three ways into the creative community.</h2>
+        </div>
+        <div class="category-grid" id="categoryCards"></div>
+      </div>
+    </section>
+
+    <section class="section featured-section">
+      <div class="container">
+        <div class="section-head row-head">
+          <div><p class="eyebrow">Featured creatives</p><h2>Selected work with momentum.</h2></div>
+          <a class="text-link" href="#explore">View directory</a>
+        </div>
+        <div class="featured-track" id="featuredTrack" aria-label="Featured creative carousel"></div>
+      </div>
+    </section>
+
+    <section class="section directory" id="explore">
+      <div class="container">
+        <div class="section-head">
+          <p class="eyebrow">Explore creatives</p>
+          <h2>Search by name, city, category, specialty, or creative language.</h2>
+        </div>
+        <div class="tools-panel" aria-label="Creative filters">
+          <label class="search-box"><span>Search</span><input id="creativeSearch" type="search" placeholder="Try Johannesburg, styling, beadwork, photography..." /></label>
+          <label><span>Location</span><select id="locationFilter"></select></label>
+          <label><span>Style / Specialty</span><select id="specialtyFilter"></select></label>
+        </div>
+        <div class="filter-row" id="categoryFilters"></div>
+        <div class="results-line"><span id="resultsCount">0 creatives</span><button class="link-button" id="clearFilters" type="button">Clear filters</button></div>
+        <div class="creative-grid" id="creativeGrid"></div>
+        <div class="empty-state" id="creativeEmpty" hidden>No creatives match the current filters. Try a broader search.</div>
+      </div>
+    </section>
+
+    <section class="section category-anchor" id="fashion-designers"><div class="container anchor-card"><p class="eyebrow">Fashion Designers</p><h2>Garments, collections, concepts, and visual fashion stories.</h2><a class="btn secondary filter-jump" href="#explore" data-category-jump="Fashion Designer">View Designers</a></div></section>
+    <section class="section category-anchor alt" id="stylists"><div class="container anchor-card"><p class="eyebrow">Stylists</p><h2>Editorial styling, personal image, lookbooks, campaigns, and cultural visual direction.</h2><a class="btn secondary filter-jump" href="#explore" data-category-jump="Stylist">View Stylists</a></div></section>
+    <section class="section category-anchor" id="visual-artists"><div class="container anchor-card"><p class="eyebrow">Visual Artists</p><h2>Photography, illustration, creative direction, content, set design, and image-making.</h2><a class="btn secondary filter-jump" href="#explore" data-category-jump="Visual Artist">View Visual Artists</a></div></section>
+
+    <section class="section events" id="events">
+      <div class="container">
+        <div class="section-head row-head">
+          <div><p class="eyebrow">Upcoming events</p><h2>Portfolio moments, showcases, and community rooms.</h2></div>
+          <p class="section-note">Events are controlled from one admin-editable JavaScript array.</p>
+        </div>
+        <div class="filter-row" id="eventFilters"></div>
+        <div class="event-grid" id="eventGrid"></div>
+        <div class="empty-state" id="eventEmpty" hidden>No upcoming events are active yet. Check back soon.</div>
+      </div>
+    </section>
+
+    <section class="section join-section" id="join">
+      <div class="container join-card">
+        <div>
+          <p class="eyebrow">Join the platform</p>
+          <h2>Share your profile for V1 review.</h2>
+          <p>This front-end demo form helps show how creatives will express interest before an admin dashboard exists. In a live version, submissions will connect to a review system.</p>
+        </div>
+        <form id="joinForm" class="join-form">
+          <div class="form-grid">
+            <label>Full name / Creative name<input name="name" required /></label>
+            <label>Category<select name="category" required><option value="">Select category</option><option>Fashion Designer</option><option>Stylist</option><option>Visual Artist</option></select></label>
+            <label>City<input name="city" required /></label>
+            <label>Email<input name="email" type="email" required /></label>
+            <label>Instagram / Portfolio link<input name="link" type="url" placeholder="https://" /></label>
+            <label>Type of work<input name="workType" placeholder="Editorial, collections, photography..." /></label>
+          </div>
+          <label>Short bio<textarea name="bio" required></textarea></label>
+          <label>Collaboration interest<textarea name="collaboration" placeholder="Brands, events, editorials, exhibitions, mentorship..."></textarea></label>
+          <button class="btn primary" type="submit">Submit Interest</button>
+          <p class="form-message" id="formMessage" role="status" hidden></p>
+        </form>
+      </div>
+    </section>
+
+    <section class="section contact" id="contact">
+      <div class="container contact-grid">
+        <div><p class="eyebrow">Contact</p><h2>Connect around talent, events, and creative visibility.</h2></div>
+        <div class="contact-card"><strong>Email</strong><a href="mailto:hello@thecreativerack.example">hello@thecreativerack.example</a><strong>Social</strong><a href="https://instagram.com/" target="_blank" rel="noreferrer">Instagram placeholder</a><strong>Location</strong><span>South Africa, open to African creative networks</span></div>
+      </div>
+    </section>
+  </main>
+
+  <div class="modal" id="profileModal" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="modalName">
+    <div class="modal-card">
+      <button class="modal-close" id="modalClose" type="button" aria-label="Close profile">Close</button>
+      <img id="modalImage" src="assets/images/designer-studio-profile.png" alt="" />
+      <div class="modal-content">
+        <p class="eyebrow" id="modalCategory"></p>
+        <h2 id="modalName"></h2>
+        <p class="modal-meta" id="modalMeta"></p>
+        <p id="modalBio"></p>
+        <div class="tag-row" id="modalTags"></div>
+        <div class="highlight-list"><h3>Work highlights</h3><ul id="modalHighlights"></ul></div>
+        <div class="highlight-list"><h3>Collaboration interests</h3><p id="modalCollaboration"></p></div>
+        <div class="modal-actions"><button class="btn primary" id="copyProfile" type="button">Copy Profile Link</button><a class="btn secondary" id="modalSocial" href="#" target="_blank" rel="noreferrer">Contact / View Socials</a></div>
+        <p class="copy-note" id="copyNote" hidden>Profile link copied.</p>
+      </div>
+    </div>
+  </div>
+
+  <button class="back-to-top" id="backToTop" type="button" aria-label="Back to top">Top</button>
+  <footer><div class="container">The Creative Rack V1. Creative visibility, cultural expression, and community discovery.</div></footer>
+  <script src="assets/js/script.js"></script>
+</body>
+</html>

@@ -1,0 +1,117 @@
+# The Creative Rack V1
+
+The Creative Rack is a public creative discovery platform for African fashion designers, stylists, and visual artists. V1 helps people view creative work, learn creative stories, discover locations and specialties, and connect through social/contact placeholders and events.
+
+## V1 Purpose
+
+This release is a static GitHub Pages-ready website focused on credibility, visibility, community discovery, and public launch readiness. It is not a sales platform.
+
+## Current Features
+
+- Responsive sticky navigation
+- Editorial hero and African-inspired visual identity
+- Three core creative categories: Fashion Designers, Stylists, Visual Artists
+- Searchable and filterable creative directory
+- Location and specialty filters
+- Featured creative horizontal scroll section
+- Profile modal with bio, work highlights, collaboration interests, tags, and social/contact placeholder
+- Copy profile link interaction
+- Demo save/favourite interaction using `localStorage`
+- Upcoming events section rendered from an admin-editable JavaScript array
+- Event type filters and no-event state
+- Front-end-only Join the Platform form
+- GitHub Pages-compatible relative paths
+
+## Intentionally Disabled for V1
+
+V1 removes selling and transaction functionality. The site does not include cart logic, checkout flows, payment options, delivery options, purchase confirmations, or store-style product actions. Work examples are presented as portfolio and profile showcases only.
+
+## File Structure
+
+```text
+/
+├── index.html
+├── README.md
+├── assets/
+│   ├── images/
+│   ├── css/
+│   │   └── style.css
+│   └── js/
+│       └── script.js
+```
+
+## Run Locally
+
+Open `index.html` directly in a browser, or run a simple local server from the project folder:
+
+```bash
+python -m http.server 8000
+```
+
+Then visit `http://localhost:8000`.
+
+## Deploy on GitHub Pages
+
+1. Create a new GitHub repository, for example `the-creative-rack`.
+2. Upload all files and folders from this project so `index.html` is in the repository root.
+3. Commit the files to the `main` branch.
+4. In GitHub, open **Settings** > **Pages**.
+5. Under **Build and deployment**, choose **Deploy from a branch**.
+6. Select branch `main` and folder `/root`, then save.
+7. Wait for GitHub Pages to publish the site.
+8. Open the live Pages URL and confirm the homepage loads from `index.html`.
+
+## Updating Creative Profiles
+
+Open `assets/js/script.js` and find:
+
+```js
+// ================================
+// ADMIN EDIT AREA: CREATIVES
+// Add or update creative profiles here
+// ================================
+```
+
+Add or edit objects inside the `creatives` array. Keep image paths relative, for example `assets/images/designer-studio-profile.png`.
+
+## Updating Upcoming Events
+
+Open `assets/js/script.js` and find:
+
+```js
+// ================================
+// ADMIN EDIT AREA: EVENTS
+// Add or update upcoming events here
+// ================================
+```
+
+Add or edit objects inside the `events` array. Use `Upcoming`, `Closed`, or `Coming Soon` for the `status` field. Events marked `Closed` are hidden from the active event grid.
+
+## Roadmap
+
+### V1 — Static Discovery Platform
+
+- Creative profiles
+- Events section
+- Search and filters
+- Static admin-editable data
+
+### V2 — Admin Dashboard
+
+- Login for admins
+- Add/edit/delete creatives
+- Add/edit/delete events
+- Review submitted applications
+
+### V3 — Full Platform
+
+- User accounts
+- Creative dashboards
+- Portfolio uploads
+- Event registration
+- Brand collaboration requests
+- Monetisation options
+
+## Notes
+
+The Join the Platform form is front-end-only in V1. It shows a professional demo confirmation but does not submit or permanently store profile information.
