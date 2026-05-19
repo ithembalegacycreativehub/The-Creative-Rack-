@@ -44,9 +44,23 @@ const events = [
   { id:"creative-networking-night", title:"Creative Networking Night", date:"2026-08-28", time:"18:30", location:"Johannesburg", type:"Networking", description:"A warm room for creatives, brands, collaborators, and culture builders to meet around future work.", host:"The Creative Rack Community", link:"#join", status:"Coming Soon" }
 ];
 
+// ================================
+// ADMIN EDIT AREA: THE WALK WAY
+// Add runway concepts or live preview pieces here.
+// Demand is a public interest signal only; it is not a transaction feature.
+// ================================
+const runwayLooks = [
+  { id:"sahel-sun-coat", title:"Sahel Sun Coat", designer:"Amani Studio", region:"Sahel", inspiration:"desert light, woven texture, and nomadic layering", image:"assets/images/utility-jacket.png", status:"Live preview", demand:72 },
+  { id:"swahili-coast-wrap", title:"Swahili Coast Wrap", designer:"Nala Threads", region:"East African Coast", inspiration:"coastal movement, warm colour, and relaxed resort silhouettes", image:"assets/images/resortwear-wrap-dress.png", status:"Concept runway", demand:64 },
+  { id:"ndebele-line-blazer", title:"Ndebele Line Blazer", designer:"House of Kairo", region:"Southern Africa", inspiration:"geometric linework, ceremony, and structured tailoring", image:"assets/images/luxury-evening-blazer.png", status:"Studio sample", demand:81 },
+  { id:"yoruba-indigo-set", title:"Yoruba Indigo Set", designer:"Luna Atelier", region:"West Africa", inspiration:"indigo depth, clean forms, and quiet ceremonial detail", image:"assets/images/minimalist-african-fashion.png", status:"Live preview", demand:58 },
+  { id:"kente-street-set", title:"Kente Street Set", designer:"Amani Studio", region:"Ghana", inspiration:"rhythm, colour blocking, and streetwear proportion", image:"assets/images/streetwear-geometric-set.png", status:"Concept runway", demand:76 }
+];
+
 let activeCategory = "All";
 let activeEventType = "All";
 let savedCreatives = JSON.parse(localStorage.getItem("creativeRackSavedProfiles") || "[]");
+let runwayInterest = JSON.parse(localStorage.getItem("creativeRackRunwayInterest") || "[]");
 let currentProfileId = null;
 
 const $ = (selector) => document.querySelector(selector);
@@ -124,6 +138,38 @@ function renderFeatured(){
   `).join("");
 }
 
+function renderRunway(){
+  $("#runwayStage").innerHTML = runwayLooks.map(look => {
+    const interested = runwayInterest.includes(look.id);
+    const demand = Math.min(100, look.demand + (interested ? 6 : 0));
+    return `
+      <article class="runway-card">
+        <div class="runway-image">
+          <img src="${look.image}" alt="${look.title} runway preview" loading="lazy" />
+          <span class="region-badge">${look.region}</span>
+        </div>
+        <div class="runway-body">
+          <span class="creative-type">${look.status}</span>
+          <h3>${look.title}</h3>
+          <p><strong>${look.designer}</strong></p>
+          <p>Inspired by ${look.inspiration}.</p>
+          <div class="demand-wrap">
+            <div class="demand-top"><span>Audience demand</span><span>${demand}%</span></div>
+            <div class="demand-bar" aria-label="Audience demand ${demand}%"><span class="demand-fill" style="--demand:${demand}%"></span></div>
+          </div>
+          <button class="interest-button ${interested ? "active" : ""}" type="button" data-runway-interest="${look.id}">${interested ? "Interest Noted" : "Signal Interest"}</button>
+        </div>
+      </article>
+    `;
+  }).join("");
+}
+
+function toggleRunwayInterest(id){
+  runwayInterest = runwayInterest.includes(id) ? runwayInterest.filter(item => item !== id) : [...runwayInterest, id];
+  localStorage.setItem("creativeRackRunwayInterest", JSON.stringify(runwayInterest));
+  renderRunway();
+}
+
 function openProfile(id){
   const creative = creatives.find(item => item.id === id);
   if(!creative) return;
@@ -198,6 +244,8 @@ function bindEvents(){
     if(save) toggleSaved(save.dataset.save);
     const profile = event.target.closest("[data-profile]");
     if(profile) openProfile(profile.dataset.profile);
+    const runwayButton = event.target.closest("[data-runway-interest]");
+    if(runwayButton) toggleRunwayInterest(runwayButton.dataset.runwayInterest);
     const eventType = event.target.closest("[data-event-type]");
     if(eventType){ activeEventType = eventType.dataset.eventType; renderEvents(); }
   });
@@ -225,6 +273,7 @@ function init(){
   renderCategories();
   renderFilterOptions();
   renderFeatured();
+  renderRunway();
   renderCreatives();
   renderEvents();
   updateHeroStats();

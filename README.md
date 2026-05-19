@@ -14,6 +14,7 @@ This release is a static GitHub Pages-ready website focused on credibility, visi
 - Searchable and filterable creative directory
 - Location and specialty filters
 - Featured creative horizontal scroll section
+- The Walk Way digital runway preview with non-transactional demand bars
 - Profile modal with bio, work highlights, collaboration interests, tags, and social/contact placeholder
 - Copy profile link interaction
 - Demo save/favourite interaction using `localStorage`
@@ -25,6 +26,8 @@ This release is a static GitHub Pages-ready website focused on credibility, visi
 ## Intentionally Disabled for V1
 
 V1 removes selling and transaction functionality. The site does not include cart logic, checkout flows, payment options, delivery options, purchase confirmations, or store-style product actions. Work examples are presented as portfolio and profile showcases only.
+
+The Walk Way demand bars are demo audience-interest signals only. They do not create orders, reservations, payments, or product availability commitments.
 
 ## File Structure
 
@@ -87,12 +90,26 @@ Open `assets/js/script.js` and find:
 
 Add or edit objects inside the `events` array. Use `Upcoming`, `Closed`, or `Coming Soon` for the `status` field. Events marked `Closed` are hidden from the active event grid.
 
+## Updating The Walk Way
+
+Open `assets/js/script.js` and find:
+
+```js
+// ================================
+// ADMIN EDIT AREA: THE WALK WAY
+// Add runway concepts or live preview pieces here.
+// ================================
+```
+
+Add or edit objects inside the `runwayLooks` array. Each look can include a title, designer, region of inspiration, image, status, and starting demand percentage.
+
 ## Roadmap
 
 ### V1 — Static Discovery Platform
 
 - Creative profiles
 - Events section
+- The Walk Way runway preview
 - Search and filters
 - Static admin-editable data
 
