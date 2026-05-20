@@ -139,22 +139,23 @@
             <h2>The Design Corner</h2>
             <p class="design-lead">A playful creative studio for testing fashion ideas.</p>
           </div>
-          <p class="section-note">The Design Corner lets you shape a fashion concept before it becomes a collection. Choose a garment, explore colour and pattern direction, save your idea, and submit it to The Creative Rack.</p>
+          <p class="section-note">The Design Corner lets you shape a fashion concept before it becomes a collection. Choose a garment, explore colour and pattern direction, rotate the studio preview, save your idea, and submit it to The Creative Rack.</p>
         </div>
 
         <div class="design-studio" id="designCorner">
           <div class="design-panel design-controls" aria-label="Design controls">
-            <div class="studio-symbol" aria-hidden="true">CR Studio</div>
+            <div class="studio-symbol" aria-hidden="true"><span>Atelier</span><strong>CR</strong></div>
+            <p class="studio-kicker">Build the silhouette, dress the surface, then send the concept into your application note.</p>
             <div class="control-group">
-              <h3>Garment type</h3>
+              <h3><span>01</span> Garment type</h3>
               <div class="option-grid" id="garmentOptions"></div>
             </div>
             <div class="control-group">
-              <h3>Base colour</h3>
+              <h3><span>02</span> Base colour</h3>
               <div class="swatch-grid" id="colourOptions"></div>
             </div>
             <div class="control-group">
-              <h3>Pattern / design detail</h3>
+              <h3><span>03</span> Design detail</h3>
               <div class="option-grid detail-grid" id="patternOptions"></div>
             </div>
             <label class="field-label">Name your concept<input id="designConceptName" type="text" placeholder="e.g. Urban Heritage Jacket" /></label>
@@ -162,7 +163,18 @@
           </div>
 
           <div class="design-panel preview-panel">
-            <div class="preview-frame" id="designPreview" aria-label="Live garment concept preview"></div>
+            <div class="atelier-toolbar" aria-label="Garment preview rotation controls">
+              <div class="view-toggle">
+                <button class="studio-tool active" id="viewFront" type="button">Front</button>
+                <button class="studio-tool" id="viewBack" type="button">Back</button>
+              </div>
+              <div class="rotate-tools">
+                <button class="studio-tool" id="rotateLeft" type="button" aria-label="Rotate garment left">Rotate Left</button>
+                <label class="rotation-label">Angle <input id="rotationControl" type="range" min="-45" max="45" value="0" /></label>
+                <button class="studio-tool" id="rotateRight" type="button" aria-label="Rotate garment right">Rotate Right</button>
+              </div>
+            </div>
+            <div class="preview-frame premium-preview" id="designPreview" aria-label="Live garment concept preview"></div>
             <div class="design-actions">
               <button class="btn primary" id="saveDesign" type="button">Save Design</button>
               <button class="btn secondary" id="loadDesign" type="button">Load Last Design</button>

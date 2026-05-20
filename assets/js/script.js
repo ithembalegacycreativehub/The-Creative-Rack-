@@ -66,6 +66,8 @@ let designCornerState = {
   garment: "Jacket",
   colour: "Clay",
   pattern: "Geometric Trim",
+  rotation: 0,
+  view: "front",
   name: "",
   notes: ""
 };
@@ -280,6 +282,8 @@ function getDesignCornerState(){
     garment: designCornerState.garment,
     colour: designCornerState.colour,
     pattern: designCornerState.pattern,
+    rotation: designCornerState.rotation,
+    view: designCornerState.view,
     name: ($("#designConceptName") && $("#designConceptName").value.trim()) || "",
     notes: ($("#designNotes") && $("#designNotes").value.trim()) || "",
     suggestedCategory: getSuggestedCategory(designCornerState.garment),
@@ -308,6 +312,7 @@ function renderGarmentPreview(state){
   const fill = getDesignColourValue(state.colour);
   const stroke = fill === "#1b1411" || fill === "#5a3827" ? "#fff9f0" : "#251611";
   const pattern = renderPatternDetail(state.pattern, fill);
+  const backDetail = state.view === "back" ? `<path d="M130 96 V284" stroke="${stroke}" stroke-width="4" stroke-dasharray="9 7" opacity=".7"/><path d="M98 126 Q130 148 162 126" fill="none" stroke="${stroke}" stroke-width="4" opacity=".58"/>` : "";
   const common = `fill="${fill}" stroke="${stroke}" stroke-width="5" stroke-linejoin="round"`;
   const label = state.name || `${state.colour} ${state.garment}`;
   let shape = "";
@@ -318,12 +323,20 @@ function renderGarmentPreview(state){
   if(state.garment === "Dress") shape = `<path ${common} d="M104 68 H156 L176 136 L214 292 H46 L84 136 Z"/><path d="M104 68 L130 108 L156 68" fill="none" stroke="${stroke}" stroke-width="5"/>`;
   if(state.garment === "Hoodie") shape = `<path ${common} d="M88 118 Q130 48 172 118 L200 292 H60 Z"/><path d="M102 126 Q130 84 158 126" fill="none" stroke="${stroke}" stroke-width="5"/><path d="M102 216 H158 Q150 252 130 252 Q110 252 102 216 Z" fill="none" stroke="${stroke}" stroke-width="5"/>`;
   return `
-    <svg class="garment-svg" viewBox="0 0 260 340" role="img" aria-label="${state.garment} preview in ${state.colour} with ${state.pattern}">
-      <rect x="18" y="18" width="224" height="304" rx="30" fill="rgba(255,249,240,.08)" stroke="rgba(255,249,240,.2)"/>
-      ${shape}
-      ${pattern}
-    </svg>
-    <div class="preview-caption"><b>${label}</b><span>${state.garment} / ${state.colour} / ${state.pattern}</span></div>
+    <div class="atelier-scene">
+      <div class="mirror-glow" aria-hidden="true"></div>
+      <div class="garment-model" style="--rotate:${state.rotation}deg">
+        <svg class="garment-svg" viewBox="0 0 260 340" role="img" aria-label="${state.view} ${state.garment} preview in ${state.colour} with ${state.pattern}">
+          <rect x="18" y="18" width="224" height="304" rx="30" fill="rgba(255,249,240,.08)" stroke="rgba(255,249,240,.2)"/>
+          <line x1="130" y1="22" x2="130" y2="56" stroke="rgba(255,249,240,.65)" stroke-width="4"/>
+          ${shape}
+          ${pattern}
+          ${backDetail}
+        </svg>
+      </div>
+      <div class="studio-floor" aria-hidden="true"></div>
+    </div>
+    <div class="preview-caption"><b>${label}</b><span>${state.view === "back" ? "Back view" : "Front view"} / ${state.garment} / ${state.colour} / ${state.pattern} / ${state.rotation}deg</span></div>
   `;
 }
 
@@ -345,6 +358,10 @@ function updateDesignPreview(){
   root.querySelectorAll("[data-design-garment]").forEach(button => button.classList.toggle("active", button.dataset.designGarment === state.garment));
   root.querySelectorAll("[data-design-colour]").forEach(button => button.classList.toggle("active", button.dataset.designColour === state.colour));
   root.querySelectorAll("[data-design-pattern]").forEach(button => button.classList.toggle("active", button.dataset.designPattern === state.pattern));
+  const rotationControl = $("#rotationControl");
+  if(rotationControl) rotationControl.value = state.rotation;
+  $("#viewFront")?.classList.toggle("active", state.view === "front");
+  $("#viewBack")?.classList.toggle("active", state.view === "back");
 }
 
 function saveDesignConcept(){
@@ -360,7 +377,7 @@ function saveDesignConcept(){
 function loadDesignConcept(){
   const saved = JSON.parse(localStorage.getItem("creativeRackLastDesignConcept") || "null");
   if(!saved){ showDesignMessage("No saved design found yet."); return; }
-  designCornerState = { garment:saved.garment || "Jacket", colour:saved.colour || "Clay", pattern:saved.pattern || "Geometric Trim", name:saved.name || "", notes:saved.notes || "" };
+  designCornerState = { garment:saved.garment || "Jacket", colour:saved.colour || "Clay", pattern:saved.pattern || "Geometric Trim", rotation:Number(saved.rotation || 0), view:saved.view || "front", name:saved.name || "", notes:saved.notes || "" };
   $("#designConceptName").value = designCornerState.name;
   $("#designNotes").value = designCornerState.notes;
   updateDesignPreview();
@@ -368,7 +385,7 @@ function loadDesignConcept(){
 }
 
 function resetDesignConcept(){
-  designCornerState = { garment:"Jacket", colour:"Clay", pattern:"Geometric Trim", name:"", notes:"" };
+  designCornerState = { garment:"Jacket", colour:"Clay", pattern:"Geometric Trim", rotation:0, view:"front", name:"", notes:"" };
   $("#designConceptName").value = "";
   $("#designNotes").value = "";
   updateDesignPreview();
@@ -383,6 +400,8 @@ function downloadDesignConcept(){
     garmentType: state.garment,
     colour: state.colour,
     pattern: state.pattern,
+    view: state.view,
+    rotation: `${state.rotation} degrees`,
     suggestedCategory: state.suggestedCategory,
     estimatedPriceRange: state.estimatedPriceRange,
     notes: state.notes,
@@ -410,6 +429,7 @@ Concept Name: ${state.name || "Untitled concept"}
 Garment: ${state.garment}
 Colour: ${state.colour}
 Design Detail: ${state.pattern}
+Preview View: ${state.view}, ${state.rotation} degrees
 Suggested Category: ${state.suggestedCategory}
 Estimated Price Range: ${state.estimatedPriceRange}
 Notes: ${state.notes || "No notes added yet."}`;
@@ -453,6 +473,26 @@ function initDesignCorner(){
     });
     $("#designConceptName").addEventListener("input", updateDesignPreview);
     $("#designNotes").addEventListener("input", updateDesignPreview);
+    $("#rotationControl").addEventListener("input", event => {
+      designCornerState.rotation = Number(event.target.value);
+      updateDesignPreview();
+    });
+    $("#rotateLeft").addEventListener("click", () => {
+      designCornerState.rotation = Math.max(-45, designCornerState.rotation - 15);
+      updateDesignPreview();
+    });
+    $("#rotateRight").addEventListener("click", () => {
+      designCornerState.rotation = Math.min(45, designCornerState.rotation + 15);
+      updateDesignPreview();
+    });
+    $("#viewFront").addEventListener("click", () => {
+      designCornerState.view = "front";
+      updateDesignPreview();
+    });
+    $("#viewBack").addEventListener("click", () => {
+      designCornerState.view = "back";
+      updateDesignPreview();
+    });
     $("#saveDesign").addEventListener("click", saveDesignConcept);
     $("#loadDesign").addEventListener("click", loadDesignConcept);
     $("#resetDesign").addEventListener("click", resetDesignConcept);

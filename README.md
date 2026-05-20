@@ -15,7 +15,7 @@ This release is a static GitHub Pages-ready website focused on credibility, visi
 - Location and specialty filters
 - Featured creative horizontal scroll section
 - The Walk Way digital runway preview with non-transactional demand bars
-- The Design Corner mini fashion studio with live SVG preview, local save/load, concept board, JSON download, and application form handoff
+- The Design Corner premium mini atelier with live SVG preview, front/back view, rotation controls, local save/load, concept board, JSON download, and application form handoff
 - Profile modal with bio, work highlights, collaboration interests, tags, and social/contact placeholder
 - Copy profile link interaction
 - Demo save/favourite interaction using `localStorage`
@@ -115,6 +115,8 @@ initDesignCorner()
 ```
 
 Garment types, colour swatches, and pattern/detail options can be edited in `designCornerConfig` inside `assets/js/script.js`.
+
+The preview supports front/back view and a rotation angle so visitors can inspect the concept like a small digital studio mockup.
 
 The feature uses:
 
