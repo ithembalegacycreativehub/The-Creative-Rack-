@@ -116,7 +116,7 @@ initDesignCorner()
 
 Garment types, colour swatches, and pattern/detail options can be edited in `designCornerConfig` inside `assets/js/script.js`.
 
-The preview supports front/back view and a rotation angle so visitors can inspect the concept like a small digital studio mockup.
+The preview supports fabric texture selection, front/back view, garment lighting, clipped SVG texture overlays, and a rotation angle so visitors can inspect the concept like a small digital studio mockup.
 
 The feature uses:
 

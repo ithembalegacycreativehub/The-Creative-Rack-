@@ -1,14 +1,14 @@
-// The Creative Rack V1
-// Static GitHub Pages discovery platform. No backend is required for V1.
+// The Creative Rack
+// Static GitHub Pages discovery platform. No backend is required.
 
 // ================================
 // ADMIN EDIT AREA: CATEGORIES
 // Update public category descriptions here
 // ================================
 const categories = [
-  { id: "Fashion Designer", label: "Fashion Designers", anchor: "fashion-designers", initials: "FD", countLabel: "4 featured", useCase: "Collections, garments, lookbooks", description: "Explore emerging and established designers creating garments, collections, concepts, and visual fashion stories." },
-  { id: "Stylist", label: "Stylists", anchor: "stylists", initials: "ST", countLabel: "3 featured", useCase: "Editorial, personal image, campaigns", description: "Find stylists shaping fashion language through editorial direction, personal image work, lookbooks, and cultural campaigns." },
-  { id: "Visual Artist", label: "Visual Artists", anchor: "visual-artists", initials: "VA", countLabel: "4 featured", useCase: "Photography, illustration, content", description: "Meet image-makers, illustrators, photographers, and creative artists building the visual layer around culture." }
+  { id: "Fashion Designer", label: "Fashion Designers", anchor: "fashion-designers", initials: "FD", countLabel: "4 featured", useCase: "Collections, garments, lookbooks", image:"assets/images/designer-studio-profile.png", tone:"Collections, craft, silhouettes", description: "Explore emerging and established designers creating garments, collections, concepts, and visual fashion stories." },
+  { id: "Stylist", label: "Stylists", anchor: "stylists", initials: "ST", countLabel: "3 featured", useCase: "Editorial, personal image, campaigns", image:"assets/images/stylist-creative-profile.png", tone:"Editorial looks, image direction", description: "Find stylists shaping fashion language through editorial direction, personal image work, lookbooks, and cultural campaigns." },
+  { id: "Visual Artist", label: "Visual Artists", anchor: "visual-artists", initials: "VA", countLabel: "4 featured", useCase: "Photography, illustration, content", image:"assets/images/visual-artist-profile.png", tone:"Image-making, campaign worlds", description: "Meet image-makers, illustrators, photographers, and creative artists building the visual layer around culture." }
 ];
 
 // ================================
@@ -65,6 +65,7 @@ let currentProfileId = null;
 let designCornerState = {
   garment: "Jacket",
   colour: "Clay",
+  material: "Structured Cotton",
   pattern: "Geometric Trim",
   rotation: 0,
   view: "front",
@@ -87,12 +88,15 @@ function toggleSaved(id){
 function renderCategories(){
   $("#categoryCards").innerHTML = categories.map(category => `
     <article class="category-card">
-      <span class="category-icon">${category.initials}</span>
-      <span class="count-pill">${category.countLabel}</span>
-      <h3>${category.label}</h3>
-      <p>${category.description}</p>
-      <p><strong>Example:</strong> ${category.useCase}</p>
-      <a class="btn secondary filter-jump" href="#explore" data-category-jump="${category.id}">View ${category.label.replace("Fashion ", "")}</a>
+      <div class="category-image"><img src="${category.image}" alt="${category.label} creative preview" loading="lazy"><span class="category-icon">${category.initials}</span></div>
+      <div class="category-content">
+        <span class="count-pill">${category.countLabel}</span>
+        <h3>${category.label}</h3>
+        <p>${category.description}</p>
+        <p class="category-tone">${category.tone}</p>
+        <p><strong>Example:</strong> ${category.useCase}</p>
+        <a class="btn secondary filter-jump" href="#explore" data-category-jump="${category.id}">View ${category.label.replace("Fashion ", "")}</a>
+      </div>
     </article>
   `).join("");
 }
@@ -245,6 +249,7 @@ const designCornerConfig = {
     { name:"Black", value:"#1b1411" },
     { name:"Denim Blue", value:"#315f83" }
   ],
+  materials: ["Structured Cotton", "Raw Linen", "Denim Twill", "Soft Leather", "Silk Sheen", "Wool Blend"],
   patterns: ["None", "Geometric Trim", "Sleeve Detail", "Pocket Detail", "Hem Border", "All-over Subtle Print"]
 };
 
@@ -281,6 +286,7 @@ function getDesignCornerState(){
   return {
     garment: designCornerState.garment,
     colour: designCornerState.colour,
+    material: designCornerState.material,
     pattern: designCornerState.pattern,
     rotation: designCornerState.rotation,
     view: designCornerState.view,
@@ -293,8 +299,19 @@ function getDesignCornerState(){
 }
 
 function calculateCreativeReadiness(state){
-  const checks = [state.garment, state.colour, state.pattern, state.name, state.notes];
+  const checks = [state.garment, state.colour, state.material, state.pattern, state.name, state.notes];
   return Math.round((checks.filter(Boolean).length / checks.length) * 100);
+}
+
+function renderMaterialDefs(material, fill){
+  const light = fill === "#1b1411" || fill === "#5a3827" ? "#fff4df" : "#3a2419";
+  const opacity = fill === "#fff9f0" || fill === "#ead8be" ? ".2" : ".28";
+  if(material === "Raw Linen") return `<pattern id="fabricTexture" width="12" height="12" patternUnits="userSpaceOnUse"><path d="M0 3H12M0 9H12M3 0V12M9 0V12" stroke="${light}" stroke-width="1" opacity="${opacity}"/></pattern>`;
+  if(material === "Denim Twill") return `<pattern id="fabricTexture" width="10" height="10" patternUnits="userSpaceOnUse" patternTransform="rotate(35)"><path d="M0 0H10" stroke="${light}" stroke-width="2" opacity="${opacity}"/><path d="M0 5H10" stroke="${light}" stroke-width="1" opacity=".12"/></pattern>`;
+  if(material === "Soft Leather") return `<filter id="grain"><feTurbulence type="fractalNoise" baseFrequency=".9" numOctaves="3" seed="8"/><feColorMatrix type="saturate" values="0"/><feComponentTransfer><feFuncA type="table" tableValues="0 .22"/></feComponentTransfer></filter><pattern id="fabricTexture" width="160" height="160" patternUnits="userSpaceOnUse"><rect width="160" height="160" filter="url(#grain)" opacity=".55"/></pattern>`;
+  if(material === "Silk Sheen") return `<linearGradient id="fabricSheen" x1="0" x2="1"><stop offset="0" stop-color="#fff" stop-opacity=".05"/><stop offset=".42" stop-color="#fff" stop-opacity=".34"/><stop offset=".62" stop-color="#000" stop-opacity=".06"/><stop offset="1" stop-color="#fff" stop-opacity=".12"/></linearGradient><pattern id="fabricTexture" width="80" height="80" patternUnits="userSpaceOnUse"><rect width="80" height="80" fill="url(#fabricSheen)"/></pattern>`;
+  if(material === "Wool Blend") return `<pattern id="fabricTexture" width="18" height="18" patternUnits="userSpaceOnUse"><circle cx="4" cy="4" r="1.2" fill="${light}" opacity="${opacity}"/><circle cx="13" cy="9" r="1" fill="${light}" opacity=".18"/><path d="M0 15Q5 12 10 15T18 15" fill="none" stroke="${light}" stroke-width="1" opacity=".16"/></pattern>`;
+  return `<pattern id="fabricTexture" width="9" height="9" patternUnits="userSpaceOnUse"><path d="M0 0H9M0 0V9" stroke="${light}" stroke-width=".8" opacity=".14"/></pattern>`;
 }
 
 function renderPatternDetail(pattern, fill){
@@ -312,31 +329,62 @@ function renderGarmentPreview(state){
   const fill = getDesignColourValue(state.colour);
   const stroke = fill === "#1b1411" || fill === "#5a3827" ? "#fff9f0" : "#251611";
   const pattern = renderPatternDetail(state.pattern, fill);
+  const materialDefs = renderMaterialDefs(state.material, fill);
   const backDetail = state.view === "back" ? `<path d="M130 96 V284" stroke="${stroke}" stroke-width="4" stroke-dasharray="9 7" opacity=".7"/><path d="M98 126 Q130 148 162 126" fill="none" stroke="${stroke}" stroke-width="4" opacity=".58"/>` : "";
   const common = `fill="${fill}" stroke="${stroke}" stroke-width="5" stroke-linejoin="round"`;
   const label = state.name || `${state.colour} ${state.garment}`;
-  let shape = "";
-  if(state.garment === "T-shirt") shape = `<path ${common} d="M78 80 L112 58 H148 L182 80 L224 122 L194 156 L176 138 V292 H84 V138 L66 156 L36 122 Z"/>`;
-  if(state.garment === "Shirt") shape = `<path ${common} d="M82 82 L112 58 L130 88 L148 58 L178 82 L206 292 H54 Z"/><path d="M130 90 V286" stroke="${stroke}" stroke-width="4"/><path d="M104 64 L130 98 L156 64" fill="none" stroke="${stroke}" stroke-width="5"/>`;
-  if(state.garment === "Jeans") shape = `<path ${common} d="M86 72 H174 L184 292 H142 L130 150 L118 292 H76 Z"/><path d="M86 112 H174 M130 74 V150" stroke="${stroke}" stroke-width="5"/><path d="M98 122 Q112 140 126 122 M134 122 Q148 140 162 122" fill="none" stroke="${stroke}" stroke-width="4"/>`;
-  if(state.garment === "Jacket") shape = `<path ${common} d="M82 82 L112 58 L130 98 L148 58 L178 82 L208 292 H52 Z"/><path d="M130 100 V292 M112 58 L88 146 M148 58 L172 146" stroke="${stroke}" stroke-width="5"/><path d="M86 184 H116 M144 184 H174" stroke="${stroke}" stroke-width="5"/>`;
-  if(state.garment === "Dress") shape = `<path ${common} d="M104 68 H156 L176 136 L214 292 H46 L84 136 Z"/><path d="M104 68 L130 108 L156 68" fill="none" stroke="${stroke}" stroke-width="5"/>`;
-  if(state.garment === "Hoodie") shape = `<path ${common} d="M88 118 Q130 48 172 118 L200 292 H60 Z"/><path d="M102 126 Q130 84 158 126" fill="none" stroke="${stroke}" stroke-width="5"/><path d="M102 216 H158 Q150 252 130 252 Q110 252 102 216 Z" fill="none" stroke="${stroke}" stroke-width="5"/>`;
+  let silhouette = "M82 82 L112 58 L130 98 L148 58 L178 82 L208 292 H52 Z";
+  let construction = `<path d="M130 100 V292 M112 58 L88 146 M148 58 L172 146" stroke="${stroke}" stroke-width="5"/><path d="M86 184 H116 M144 184 H174" stroke="${stroke}" stroke-width="5"/>`;
+  if(state.garment === "T-shirt"){
+    silhouette = "M78 80 L112 58 H148 L182 80 L224 122 L194 156 L176 138 V292 H84 V138 L66 156 L36 122 Z";
+    construction = `<path d="M92 100 Q130 122 168 100 M84 138 V292 M176 138 V292" fill="none" stroke="${stroke}" stroke-width="4" opacity=".65"/>`;
+  }
+  if(state.garment === "Shirt"){
+    silhouette = "M82 82 L112 58 L130 88 L148 58 L178 82 L206 292 H54 Z";
+    construction = `<path d="M130 90 V286" stroke="${stroke}" stroke-width="4"/><path d="M104 64 L130 98 L156 64" fill="none" stroke="${stroke}" stroke-width="5"/><circle cx="130" cy="132" r="3" fill="${stroke}"/><circle cx="130" cy="166" r="3" fill="${stroke}"/><circle cx="130" cy="200" r="3" fill="${stroke}"/>`;
+  }
+  if(state.garment === "Jeans"){
+    silhouette = "M86 72 H174 L184 292 H142 L130 150 L118 292 H76 Z";
+    construction = `<path d="M86 112 H174 M130 74 V150" stroke="${stroke}" stroke-width="5"/><path d="M98 122 Q112 140 126 122 M134 122 Q148 140 162 122" fill="none" stroke="${stroke}" stroke-width="4"/><path d="M112 150 L104 292 M148 150 L156 292" stroke="${stroke}" stroke-width="3" opacity=".55"/>`;
+  }
+  if(state.garment === "Dress"){
+    silhouette = "M104 68 H156 L176 136 L214 292 H46 L84 136 Z";
+    construction = `<path d="M104 68 L130 108 L156 68" fill="none" stroke="${stroke}" stroke-width="5"/><path d="M84 136 Q130 156 176 136 M94 166 Q130 182 166 166" fill="none" stroke="${stroke}" stroke-width="4" opacity=".55"/>`;
+  }
+  if(state.garment === "Hoodie"){
+    silhouette = "M88 118 Q130 48 172 118 L200 292 H60 Z";
+    construction = `<path d="M102 126 Q130 84 158 126" fill="none" stroke="${stroke}" stroke-width="5"/><path d="M102 216 H158 Q150 252 130 252 Q110 252 102 216 Z" fill="none" stroke="${stroke}" stroke-width="5"/><path d="M116 112 Q130 136 144 112" fill="none" stroke="${stroke}" stroke-width="3"/>`;
+  }
+  const shape = `<path ${common} d="${silhouette}"/><path d="${silhouette}" fill="url(#garmentLight)" opacity=".42"/>${construction}`;
   return `
     <div class="atelier-scene">
       <div class="mirror-glow" aria-hidden="true"></div>
       <div class="garment-model" style="--rotate:${state.rotation}deg">
         <svg class="garment-svg" viewBox="0 0 260 340" role="img" aria-label="${state.view} ${state.garment} preview in ${state.colour} with ${state.pattern}">
+          <defs>
+            ${materialDefs}
+            <linearGradient id="garmentLight" x1="0" x2="1">
+              <stop offset="0" stop-color="#000" stop-opacity=".08"/>
+              <stop offset=".48" stop-color="#fff" stop-opacity=".22"/>
+              <stop offset="1" stop-color="#000" stop-opacity=".16"/>
+            </linearGradient>
+            <filter id="softShadow"><feDropShadow dx="0" dy="10" stdDeviation="7" flood-color="#000" flood-opacity=".28"/></filter>
+            <clipPath id="garmentClip"><path d="${silhouette}"/></clipPath>
+          </defs>
           <rect x="18" y="18" width="224" height="304" rx="30" fill="rgba(255,249,240,.08)" stroke="rgba(255,249,240,.2)"/>
           <line x1="130" y1="22" x2="130" y2="56" stroke="rgba(255,249,240,.65)" stroke-width="4"/>
-          ${shape}
+          <g filter="url(#softShadow)">
+            ${shape}
+            <path d="M72 96Q130 122 188 96M82 286Q130 302 178 286" fill="none" stroke="url(#garmentLight)" stroke-width="11" opacity=".5"/>
+            <rect x="38" y="54" width="184" height="246" rx="18" fill="url(#fabricTexture)" opacity=".95" clip-path="url(#garmentClip)"/>
+          </g>
           ${pattern}
           ${backDetail}
         </svg>
       </div>
       <div class="studio-floor" aria-hidden="true"></div>
     </div>
-    <div class="preview-caption"><b>${label}</b><span>${state.view === "back" ? "Back view" : "Front view"} / ${state.garment} / ${state.colour} / ${state.pattern} / ${state.rotation}deg</span></div>
+    <div class="preview-caption"><b>${label}</b><span>${state.view === "back" ? "Back view" : "Front view"} / ${state.garment} / ${state.colour} / ${state.material} / ${state.pattern} / ${state.rotation}deg</span></div>
   `;
 }
 
@@ -349,6 +397,7 @@ function updateDesignPreview(){
   $("#summaryName").textContent = state.name || "Untitled concept";
   $("#summaryGarment").textContent = state.garment;
   $("#summaryColour").textContent = state.colour;
+  $("#summaryMaterial").textContent = state.material;
   $("#summaryPattern").textContent = state.pattern;
   $("#summaryCategory").textContent = state.suggestedCategory;
   $("#summaryPrice").textContent = state.estimatedPriceRange;
@@ -357,6 +406,7 @@ function updateDesignPreview(){
   $("#readinessFill").style.setProperty("--demand", `${score}%`);
   root.querySelectorAll("[data-design-garment]").forEach(button => button.classList.toggle("active", button.dataset.designGarment === state.garment));
   root.querySelectorAll("[data-design-colour]").forEach(button => button.classList.toggle("active", button.dataset.designColour === state.colour));
+  root.querySelectorAll("[data-design-material]").forEach(button => button.classList.toggle("active", button.dataset.designMaterial === state.material));
   root.querySelectorAll("[data-design-pattern]").forEach(button => button.classList.toggle("active", button.dataset.designPattern === state.pattern));
   const rotationControl = $("#rotationControl");
   if(rotationControl) rotationControl.value = state.rotation;
@@ -377,7 +427,7 @@ function saveDesignConcept(){
 function loadDesignConcept(){
   const saved = JSON.parse(localStorage.getItem("creativeRackLastDesignConcept") || "null");
   if(!saved){ showDesignMessage("No saved design found yet."); return; }
-  designCornerState = { garment:saved.garment || "Jacket", colour:saved.colour || "Clay", pattern:saved.pattern || "Geometric Trim", rotation:Number(saved.rotation || 0), view:saved.view || "front", name:saved.name || "", notes:saved.notes || "" };
+  designCornerState = { garment:saved.garment || "Jacket", colour:saved.colour || "Clay", material:saved.material || "Structured Cotton", pattern:saved.pattern || "Geometric Trim", rotation:Number(saved.rotation || 0), view:saved.view || "front", name:saved.name || "", notes:saved.notes || "" };
   $("#designConceptName").value = designCornerState.name;
   $("#designNotes").value = designCornerState.notes;
   updateDesignPreview();
@@ -385,7 +435,7 @@ function loadDesignConcept(){
 }
 
 function resetDesignConcept(){
-  designCornerState = { garment:"Jacket", colour:"Clay", pattern:"Geometric Trim", rotation:0, view:"front", name:"", notes:"" };
+  designCornerState = { garment:"Jacket", colour:"Clay", material:"Structured Cotton", pattern:"Geometric Trim", rotation:0, view:"front", name:"", notes:"" };
   $("#designConceptName").value = "";
   $("#designNotes").value = "";
   updateDesignPreview();
@@ -399,6 +449,7 @@ function downloadDesignConcept(){
     conceptName: state.name || "Untitled concept",
     garmentType: state.garment,
     colour: state.colour,
+    fabricTexture: state.material,
     pattern: state.pattern,
     view: state.view,
     rotation: `${state.rotation} degrees`,
@@ -428,6 +479,7 @@ function sendConceptToApplicationForm(){
 Concept Name: ${state.name || "Untitled concept"}
 Garment: ${state.garment}
 Colour: ${state.colour}
+Fabric Texture: ${state.material}
 Design Detail: ${state.pattern}
 Preview View: ${state.view}, ${state.rotation} degrees
 Suggested Category: ${state.suggestedCategory}
@@ -446,7 +498,7 @@ function renderConceptBoard(){
     boardEl.innerHTML = `<p class="empty-board">Saved concepts will appear here on this device.</p>`;
     return;
   }
-  boardEl.innerHTML = board.map(item => `<article class="concept-card"><b>${item.name || "Untitled concept"}</b><span>${item.garment} / ${item.colour} / ${item.pattern}</span><span>${getSuggestedCategory(item.garment)}</span></article>`).join("");
+  boardEl.innerHTML = board.map(item => `<article class="concept-card"><b>${item.name || "Untitled concept"}</b><span>${item.garment} / ${item.colour} / ${item.material || "Structured Cotton"} / ${item.pattern}</span><span>${getSuggestedCategory(item.garment)}</span></article>`).join("");
 }
 
 function showDesignMessage(text){
@@ -462,13 +514,16 @@ function initDesignCorner(){
   try{
     $("#garmentOptions").innerHTML = designCornerConfig.garments.map(item => `<button class="design-choice" type="button" data-design-garment="${item}">${item}</button>`).join("");
     $("#colourOptions").innerHTML = designCornerConfig.colours.map(item => `<button class="swatch-choice" type="button" data-design-colour="${item.name}"><span class="swatch-dot" style="background:${item.value}"></span>${item.name}</button>`).join("");
+    $("#materialOptions").innerHTML = designCornerConfig.materials.map(item => `<button class="material-choice" type="button" data-design-material="${item}"><span class="material-sample ${item.toLowerCase().replace(/\s+/g,"-")}"></span>${item}</button>`).join("");
     $("#patternOptions").innerHTML = designCornerConfig.patterns.map(item => `<button class="design-choice" type="button" data-design-pattern="${item}">${item}</button>`).join("");
     root.addEventListener("click", event => {
       const garment = event.target.closest("[data-design-garment]");
       const colour = event.target.closest("[data-design-colour]");
+      const material = event.target.closest("[data-design-material]");
       const pattern = event.target.closest("[data-design-pattern]");
       if(garment){ designCornerState.garment = garment.dataset.designGarment; updateDesignPreview(); }
       if(colour){ designCornerState.colour = colour.dataset.designColour; updateDesignPreview(); }
+      if(material){ designCornerState.material = material.dataset.designMaterial; updateDesignPreview(); }
       if(pattern){ designCornerState.pattern = pattern.dataset.designPattern; updateDesignPreview(); }
     });
     $("#designConceptName").addEventListener("input", updateDesignPreview);
@@ -534,7 +589,7 @@ function bindEvents(){
   $("#copyProfile").addEventListener("click", copyProfileLink);
   $("#joinForm").addEventListener("submit", event => {
     event.preventDefault();
-    // V1 demo only: this form does not send or permanently store submissions.
+    // Demo only: this form does not send or permanently store submissions.
     $("#formMessage").textContent = "Thank you for your interest. Your profile information has been captured for demo purposes. In the live version, this form will connect to an admin review system.";
     $("#formMessage").hidden = false;
     event.currentTarget.reset();
