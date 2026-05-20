@@ -19,6 +19,7 @@
         <a href="#home">Home</a>
         <a href="#explore">Explore Creatives</a>
         <a href="#walk-way">The Walk Way</a>
+        <a href="#design-corner">Design Corner</a>
         <a href="#fashion-designers">Fashion Designers</a>
         <a href="#stylists">Stylists</a>
         <a href="#visual-artists">Visual Artists</a>
@@ -40,6 +41,7 @@
         <p class="hero-copy">Discover fashion designers, stylists, and visual artists shaping culture through original work, visual storytelling, and creative expression.</p>
         <div class="hero-actions">
           <a class="btn primary" href="#explore">Explore Creatives</a>
+          <a class="btn secondary" href="#design-corner">Try The Design Corner</a>
           <a class="btn secondary" href="#join">Join the Platform</a>
           <a class="btn ghost" href="#events">View Upcoming Events</a>
         </div>
@@ -129,6 +131,71 @@
       </div>
     </section>
 
+    <section class="section design-corner" id="design-corner">
+      <div class="container">
+        <div class="section-head row-head">
+          <div>
+            <p class="eyebrow">Design Corner</p>
+            <h2>The Design Corner</h2>
+            <p class="design-lead">A playful creative studio for testing fashion ideas.</p>
+          </div>
+          <p class="section-note">The Design Corner lets you shape a fashion concept before it becomes a collection. Choose a garment, explore colour and pattern direction, save your idea, and submit it to The Creative Rack.</p>
+        </div>
+
+        <div class="design-studio" id="designCorner">
+          <div class="design-panel design-controls" aria-label="Design controls">
+            <div class="studio-symbol" aria-hidden="true">CR Studio</div>
+            <div class="control-group">
+              <h3>Garment type</h3>
+              <div class="option-grid" id="garmentOptions"></div>
+            </div>
+            <div class="control-group">
+              <h3>Base colour</h3>
+              <div class="swatch-grid" id="colourOptions"></div>
+            </div>
+            <div class="control-group">
+              <h3>Pattern / design detail</h3>
+              <div class="option-grid detail-grid" id="patternOptions"></div>
+            </div>
+            <label class="field-label">Name your concept<input id="designConceptName" type="text" placeholder="e.g. Urban Heritage Jacket" /></label>
+            <label class="field-label">Creative notes<textarea id="designNotes" placeholder="Describe the inspiration, fabric idea, styling direction or target customer."></textarea></label>
+          </div>
+
+          <div class="design-panel preview-panel">
+            <div class="preview-frame" id="designPreview" aria-label="Live garment concept preview"></div>
+            <div class="design-actions">
+              <button class="btn primary" id="saveDesign" type="button">Save Design</button>
+              <button class="btn secondary" id="loadDesign" type="button">Load Last Design</button>
+              <button class="btn secondary" id="resetDesign" type="button">Reset Design</button>
+              <button class="btn secondary" id="downloadDesign" type="button">Download Concept</button>
+              <button class="btn primary" id="submitDesignConcept" type="button">Submit this concept</button>
+            </div>
+            <p class="form-message" id="designCornerMessage" role="status" hidden></p>
+          </div>
+
+          <aside class="design-panel summary-panel" aria-label="Design summary">
+            <h3>Concept summary</h3>
+            <dl class="summary-list">
+              <div><dt>Concept name</dt><dd id="summaryName">Untitled concept</dd></div>
+              <div><dt>Garment type</dt><dd id="summaryGarment">Jacket</dd></div>
+              <div><dt>Base colour</dt><dd id="summaryColour">Clay</dd></div>
+              <div><dt>Design detail</dt><dd id="summaryPattern">Geometric Trim</dd></div>
+              <div><dt>Suggested category</dt><dd id="summaryCategory">Statement Outerwear</dd></div>
+              <div><dt>Estimated concept price range</dt><dd id="summaryPrice">R1,200 - R2,500</dd></div>
+            </dl>
+            <div class="readiness-box">
+              <div class="demand-top"><span>Creative readiness</span><span id="readinessText">60%</span></div>
+              <div class="demand-bar" aria-label="Creative readiness score"><span class="demand-fill" id="readinessFill" style="--demand:60%"></span></div>
+            </div>
+            <div class="concept-board">
+              <h3>My Concept Board</h3>
+              <div id="conceptBoard" class="concept-board-grid"></div>
+            </div>
+          </aside>
+        </div>
+      </div>
+    </section>
+
     <section class="section join-section" id="join">
       <div class="container join-card">
         <div>
@@ -146,7 +213,7 @@
             <label>Type of work<input name="workType" placeholder="Editorial, collections, photography..." /></label>
           </div>
           <label>Short bio<textarea name="bio" required></textarea></label>
-          <label>Collaboration interest<textarea name="collaboration" placeholder="Brands, events, editorials, exhibitions, mentorship..."></textarea></label>
+          <label>Collaboration interest<textarea id="creativeApplicationMessage" name="collaboration" placeholder="Brands, events, editorials, exhibitions, mentorship..."></textarea></label>
           <button class="btn primary" type="submit">Submit Interest</button>
           <p class="form-message" id="formMessage" role="status" hidden></p>
         </form>

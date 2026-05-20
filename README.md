@@ -15,6 +15,7 @@ This release is a static GitHub Pages-ready website focused on credibility, visi
 - Location and specialty filters
 - Featured creative horizontal scroll section
 - The Walk Way digital runway preview with non-transactional demand bars
+- The Design Corner mini fashion studio with live SVG preview, local save/load, concept board, JSON download, and application form handoff
 - Profile modal with bio, work highlights, collaboration interests, tags, and social/contact placeholder
 - Copy profile link interaction
 - Demo save/favourite interaction using `localStorage`
@@ -28,6 +29,8 @@ This release is a static GitHub Pages-ready website focused on credibility, visi
 V1 removes selling and transaction functionality. The site does not include cart logic, checkout flows, payment options, delivery options, purchase confirmations, or store-style product actions. Work examples are presented as portfolio and profile showcases only.
 
 The Walk Way demand bars are demo audience-interest signals only. They do not create orders, reservations, payments, or product availability commitments.
+
+The Design Corner is also browser-only. Saved concepts are stored in the visitor's `localStorage` on that device and are not submitted anywhere unless the visitor copies the concept into the front-end application form.
 
 ## File Structure
 
@@ -103,6 +106,23 @@ Open `assets/js/script.js` and find:
 
 Add or edit objects inside the `runwayLooks` array. Each look can include a title, designer, region of inspiration, image, status, and starting demand percentage.
 
+## Updating The Design Corner
+
+The Design Corner lives in `index.html`, `assets/css/style.css`, and `assets/js/script.js`. The main setup function is:
+
+```js
+initDesignCorner()
+```
+
+Garment types, colour swatches, and pattern/detail options can be edited in `designCornerConfig` inside `assets/js/script.js`.
+
+The feature uses:
+
+- `creativeRackLastDesignConcept` for the latest saved concept
+- `creativeRackConceptBoard` for the small local concept board
+
+Both are browser `localStorage` keys. There is no backend database in V1.
+
 ## Roadmap
 
 ### V1 — Static Discovery Platform
@@ -110,6 +130,7 @@ Add or edit objects inside the `runwayLooks` array. Each look can include a titl
 - Creative profiles
 - Events section
 - The Walk Way runway preview
+- The Design Corner concept studio
 - Search and filters
 - Static admin-editable data
 

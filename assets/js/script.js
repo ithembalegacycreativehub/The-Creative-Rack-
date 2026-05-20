@@ -62,6 +62,13 @@ let activeEventType = "All";
 let savedCreatives = JSON.parse(localStorage.getItem("creativeRackSavedProfiles") || "[]");
 let runwayInterest = JSON.parse(localStorage.getItem("creativeRackRunwayInterest") || "[]");
 let currentProfileId = null;
+let designCornerState = {
+  garment: "Jacket",
+  colour: "Clay",
+  pattern: "Geometric Trim",
+  name: "",
+  notes: ""
+};
 
 const $ = (selector) => document.querySelector(selector);
 const unique = (items) => ["All", ...Array.from(new Set(items)).sort()];
@@ -225,6 +232,239 @@ function setCategory(category){
   renderCreatives();
 }
 
+const designCornerConfig = {
+  garments: ["T-shirt", "Shirt", "Jeans", "Jacket", "Dress", "Hoodie"],
+  colours: [
+    { name:"Ivory", value:"#fff9f0" },
+    { name:"Sand", value:"#ead8be" },
+    { name:"Cacao Brown", value:"#5a3827" },
+    { name:"Clay", value:"#a85a2b" },
+    { name:"Olive", value:"#315a3c" },
+    { name:"Black", value:"#1b1411" },
+    { name:"Denim Blue", value:"#315f83" }
+  ],
+  patterns: ["None", "Geometric Trim", "Sleeve Detail", "Pocket Detail", "Hem Border", "All-over Subtle Print"]
+};
+
+function getSuggestedCategory(garment){
+  const map = {
+    "T-shirt":"Streetwear / Everyday",
+    "Shirt":"Resortwear / Smart Casual",
+    "Jeans":"Streetwear / Denim",
+    "Jacket":"Statement Outerwear",
+    "Dress":"Resortwear / Occasionwear",
+    "Hoodie":"Streetwear / Lifestyle"
+  };
+  return map[garment] || "Creative Concept";
+}
+
+function getEstimatedPriceRange(garment){
+  const map = {
+    "T-shirt":"R350 - R750",
+    "Shirt":"R550 - R1,100",
+    "Jeans":"R700 - R1,500",
+    "Jacket":"R1,200 - R2,500",
+    "Dress":"R850 - R2,200",
+    "Hoodie":"R650 - R1,400"
+  };
+  return map[garment] || "To be refined";
+}
+
+function getDesignColourValue(name){
+  const colour = designCornerConfig.colours.find(item => item.name === name);
+  return colour ? colour.value : "#a85a2b";
+}
+
+function getDesignCornerState(){
+  return {
+    garment: designCornerState.garment,
+    colour: designCornerState.colour,
+    pattern: designCornerState.pattern,
+    name: ($("#designConceptName") && $("#designConceptName").value.trim()) || "",
+    notes: ($("#designNotes") && $("#designNotes").value.trim()) || "",
+    suggestedCategory: getSuggestedCategory(designCornerState.garment),
+    estimatedPriceRange: getEstimatedPriceRange(designCornerState.garment),
+    timestamp: new Date().toISOString()
+  };
+}
+
+function calculateCreativeReadiness(state){
+  const checks = [state.garment, state.colour, state.pattern, state.name, state.notes];
+  return Math.round((checks.filter(Boolean).length / checks.length) * 100);
+}
+
+function renderPatternDetail(pattern, fill){
+  const trim = "#f5d69f";
+  const darkTrim = fill === "#fff9f0" || fill === "#ead8be" ? "#5a3827" : trim;
+  if(pattern === "None") return "";
+  if(pattern === "Geometric Trim") return `<path d="M78 116 L104 142 L130 116 L156 142 L182 116" fill="none" stroke="${darkTrim}" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/><path d="M82 276 H178" stroke="${darkTrim}" stroke-width="8" stroke-linecap="round"/>`;
+  if(pattern === "Sleeve Detail") return `<path d="M45 130 H85" stroke="${darkTrim}" stroke-width="10" stroke-linecap="round"/><path d="M175 130 H215" stroke="${darkTrim}" stroke-width="10" stroke-linecap="round"/>`;
+  if(pattern === "Pocket Detail") return `<rect x="112" y="158" width="38" height="44" rx="6" fill="none" stroke="${darkTrim}" stroke-width="7"/><path d="M112 174 H150" stroke="${darkTrim}" stroke-width="5"/>`;
+  if(pattern === "Hem Border") return `<path d="M78 278 H184" stroke="${darkTrim}" stroke-width="12" stroke-linecap="round"/><path d="M88 258 H174" stroke="${darkTrim}" stroke-width="4" stroke-dasharray="8 7"/>`;
+  return `<g fill="${darkTrim}" opacity=".72"><circle cx="92" cy="132" r="5"/><circle cx="130" cy="154" r="5"/><circle cx="168" cy="132" r="5"/><circle cx="100" cy="210" r="5"/><circle cx="154" cy="232" r="5"/><circle cx="126" cy="270" r="5"/></g>`;
+}
+
+function renderGarmentPreview(state){
+  const fill = getDesignColourValue(state.colour);
+  const stroke = fill === "#1b1411" || fill === "#5a3827" ? "#fff9f0" : "#251611";
+  const pattern = renderPatternDetail(state.pattern, fill);
+  const common = `fill="${fill}" stroke="${stroke}" stroke-width="5" stroke-linejoin="round"`;
+  const label = state.name || `${state.colour} ${state.garment}`;
+  let shape = "";
+  if(state.garment === "T-shirt") shape = `<path ${common} d="M78 80 L112 58 H148 L182 80 L224 122 L194 156 L176 138 V292 H84 V138 L66 156 L36 122 Z"/>`;
+  if(state.garment === "Shirt") shape = `<path ${common} d="M82 82 L112 58 L130 88 L148 58 L178 82 L206 292 H54 Z"/><path d="M130 90 V286" stroke="${stroke}" stroke-width="4"/><path d="M104 64 L130 98 L156 64" fill="none" stroke="${stroke}" stroke-width="5"/>`;
+  if(state.garment === "Jeans") shape = `<path ${common} d="M86 72 H174 L184 292 H142 L130 150 L118 292 H76 Z"/><path d="M86 112 H174 M130 74 V150" stroke="${stroke}" stroke-width="5"/><path d="M98 122 Q112 140 126 122 M134 122 Q148 140 162 122" fill="none" stroke="${stroke}" stroke-width="4"/>`;
+  if(state.garment === "Jacket") shape = `<path ${common} d="M82 82 L112 58 L130 98 L148 58 L178 82 L208 292 H52 Z"/><path d="M130 100 V292 M112 58 L88 146 M148 58 L172 146" stroke="${stroke}" stroke-width="5"/><path d="M86 184 H116 M144 184 H174" stroke="${stroke}" stroke-width="5"/>`;
+  if(state.garment === "Dress") shape = `<path ${common} d="M104 68 H156 L176 136 L214 292 H46 L84 136 Z"/><path d="M104 68 L130 108 L156 68" fill="none" stroke="${stroke}" stroke-width="5"/>`;
+  if(state.garment === "Hoodie") shape = `<path ${common} d="M88 118 Q130 48 172 118 L200 292 H60 Z"/><path d="M102 126 Q130 84 158 126" fill="none" stroke="${stroke}" stroke-width="5"/><path d="M102 216 H158 Q150 252 130 252 Q110 252 102 216 Z" fill="none" stroke="${stroke}" stroke-width="5"/>`;
+  return `
+    <svg class="garment-svg" viewBox="0 0 260 340" role="img" aria-label="${state.garment} preview in ${state.colour} with ${state.pattern}">
+      <rect x="18" y="18" width="224" height="304" rx="30" fill="rgba(255,249,240,.08)" stroke="rgba(255,249,240,.2)"/>
+      ${shape}
+      ${pattern}
+    </svg>
+    <div class="preview-caption"><b>${label}</b><span>${state.garment} / ${state.colour} / ${state.pattern}</span></div>
+  `;
+}
+
+function updateDesignPreview(){
+  const root = $("#designCorner");
+  if(!root) return;
+  const state = getDesignCornerState();
+  designCornerState = { ...designCornerState, name: state.name, notes: state.notes };
+  $("#designPreview").innerHTML = renderGarmentPreview(state);
+  $("#summaryName").textContent = state.name || "Untitled concept";
+  $("#summaryGarment").textContent = state.garment;
+  $("#summaryColour").textContent = state.colour;
+  $("#summaryPattern").textContent = state.pattern;
+  $("#summaryCategory").textContent = state.suggestedCategory;
+  $("#summaryPrice").textContent = state.estimatedPriceRange;
+  const score = calculateCreativeReadiness(state);
+  $("#readinessText").textContent = `${score}%`;
+  $("#readinessFill").style.setProperty("--demand", `${score}%`);
+  root.querySelectorAll("[data-design-garment]").forEach(button => button.classList.toggle("active", button.dataset.designGarment === state.garment));
+  root.querySelectorAll("[data-design-colour]").forEach(button => button.classList.toggle("active", button.dataset.designColour === state.colour));
+  root.querySelectorAll("[data-design-pattern]").forEach(button => button.classList.toggle("active", button.dataset.designPattern === state.pattern));
+}
+
+function saveDesignConcept(){
+  const state = getDesignCornerState();
+  localStorage.setItem("creativeRackLastDesignConcept", JSON.stringify(state));
+  const board = JSON.parse(localStorage.getItem("creativeRackConceptBoard") || "[]");
+  board.unshift(state);
+  localStorage.setItem("creativeRackConceptBoard", JSON.stringify(board.slice(0, 6)));
+  renderConceptBoard();
+  showDesignMessage("Design saved to this browser.");
+}
+
+function loadDesignConcept(){
+  const saved = JSON.parse(localStorage.getItem("creativeRackLastDesignConcept") || "null");
+  if(!saved){ showDesignMessage("No saved design found yet."); return; }
+  designCornerState = { garment:saved.garment || "Jacket", colour:saved.colour || "Clay", pattern:saved.pattern || "Geometric Trim", name:saved.name || "", notes:saved.notes || "" };
+  $("#designConceptName").value = designCornerState.name;
+  $("#designNotes").value = designCornerState.notes;
+  updateDesignPreview();
+  showDesignMessage("Last design loaded.");
+}
+
+function resetDesignConcept(){
+  designCornerState = { garment:"Jacket", colour:"Clay", pattern:"Geometric Trim", name:"", notes:"" };
+  $("#designConceptName").value = "";
+  $("#designNotes").value = "";
+  updateDesignPreview();
+  showDesignMessage("Design reset.");
+}
+
+function downloadDesignConcept(){
+  const state = getDesignCornerState();
+  const payload = {
+    title: "The Creative Rack Design Corner Concept",
+    conceptName: state.name || "Untitled concept",
+    garmentType: state.garment,
+    colour: state.colour,
+    pattern: state.pattern,
+    suggestedCategory: state.suggestedCategory,
+    estimatedPriceRange: state.estimatedPriceRange,
+    notes: state.notes,
+    timestamp: state.timestamp
+  };
+  const blob = new Blob([JSON.stringify(payload, null, 2)], { type:"application/json" });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = "creative-rack-design-concept.json";
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+  URL.revokeObjectURL(url);
+  showDesignMessage("Concept file downloaded.");
+}
+
+function sendConceptToApplicationForm(){
+  const message = $("#creativeApplicationMessage") || $("#joinForm textarea");
+  const form = $("#join");
+  if(!message || !form){ showDesignMessage("Application form could not be found."); return; }
+  const state = getDesignCornerState();
+  const conceptText = `Design Corner Concept:
+Concept Name: ${state.name || "Untitled concept"}
+Garment: ${state.garment}
+Colour: ${state.colour}
+Design Detail: ${state.pattern}
+Suggested Category: ${state.suggestedCategory}
+Estimated Price Range: ${state.estimatedPriceRange}
+Notes: ${state.notes || "No notes added yet."}`;
+  message.value = message.value ? `${message.value}\n\n${conceptText}` : conceptText;
+  form.scrollIntoView({ behavior:"smooth", block:"start" });
+  showDesignMessage("Concept added to the application form.");
+}
+
+function renderConceptBoard(){
+  const boardEl = $("#conceptBoard");
+  if(!boardEl) return;
+  const board = JSON.parse(localStorage.getItem("creativeRackConceptBoard") || "[]");
+  if(!board.length){
+    boardEl.innerHTML = `<p class="empty-board">Saved concepts will appear here on this device.</p>`;
+    return;
+  }
+  boardEl.innerHTML = board.map(item => `<article class="concept-card"><b>${item.name || "Untitled concept"}</b><span>${item.garment} / ${item.colour} / ${item.pattern}</span><span>${getSuggestedCategory(item.garment)}</span></article>`).join("");
+}
+
+function showDesignMessage(text){
+  const message = $("#designCornerMessage");
+  if(!message) return;
+  message.textContent = text;
+  message.hidden = false;
+}
+
+function initDesignCorner(){
+  const root = $("#designCorner");
+  if(!root) return;
+  try{
+    $("#garmentOptions").innerHTML = designCornerConfig.garments.map(item => `<button class="design-choice" type="button" data-design-garment="${item}">${item}</button>`).join("");
+    $("#colourOptions").innerHTML = designCornerConfig.colours.map(item => `<button class="swatch-choice" type="button" data-design-colour="${item.name}"><span class="swatch-dot" style="background:${item.value}"></span>${item.name}</button>`).join("");
+    $("#patternOptions").innerHTML = designCornerConfig.patterns.map(item => `<button class="design-choice" type="button" data-design-pattern="${item}">${item}</button>`).join("");
+    root.addEventListener("click", event => {
+      const garment = event.target.closest("[data-design-garment]");
+      const colour = event.target.closest("[data-design-colour]");
+      const pattern = event.target.closest("[data-design-pattern]");
+      if(garment){ designCornerState.garment = garment.dataset.designGarment; updateDesignPreview(); }
+      if(colour){ designCornerState.colour = colour.dataset.designColour; updateDesignPreview(); }
+      if(pattern){ designCornerState.pattern = pattern.dataset.designPattern; updateDesignPreview(); }
+    });
+    $("#designConceptName").addEventListener("input", updateDesignPreview);
+    $("#designNotes").addEventListener("input", updateDesignPreview);
+    $("#saveDesign").addEventListener("click", saveDesignConcept);
+    $("#loadDesign").addEventListener("click", loadDesignConcept);
+    $("#resetDesign").addEventListener("click", resetDesignConcept);
+    $("#downloadDesign").addEventListener("click", downloadDesignConcept);
+    $("#submitDesignConcept").addEventListener("click", sendConceptToApplicationForm);
+    renderConceptBoard();
+    updateDesignPreview();
+  }catch(error){
+    console.error("Design Corner failed to initialise", error);
+  }
+}
+
 function bindEvents(){
   $("#menuToggle").addEventListener("click", () => {
     const isOpen = $("#siteNav").classList.toggle("open");
@@ -277,6 +517,7 @@ function init(){
   renderCreatives();
   renderEvents();
   updateHeroStats();
+  initDesignCorner();
   bindEvents();
   openProfileFromHash();
 }
