@@ -4,10 +4,16 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="description" content="The Creative Rack is a public discovery platform for African fashion designers, stylists, and visual artists." />
+  <meta name="theme-color" content="#251611" />
+  <meta property="og:title" content="The Creative Rack | Where African Creative Work Gets Seen" />
+  <meta property="og:description" content="Discover African fashion designers, stylists, and visual artists. Explore profiles, events, runway previews, and the Design Corner." />
+  <meta property="og:image" content="assets/images/hero-modern-african-editorial.png" />
+  <meta property="og:type" content="website" />
   <title>The Creative Rack | Where African Creative Work Gets Seen</title>
   <link rel="stylesheet" href="assets/css/style.css" />
 </head>
 <body>
+  <a class="skip-link" href="#main">Skip to content</a>
   <header class="site-header" id="top">
     <div class="container nav-wrap">
       <a class="brand" href="#home" aria-label="The Creative Rack home">
@@ -31,7 +37,7 @@
     </div>
   </header>
 
-  <main>
+  <main id="main">
     <section class="hero" id="home">
       <div class="hero-media"><img src="assets/images/hero-modern-african-editorial.png" alt="Editorial African creative portrait" /></div>
       <div class="container hero-content">
@@ -63,6 +69,14 @@
       </div>
     </section>
 
+    <section class="section trust-section" aria-label="Platform trust signals">
+      <div class="container trust-grid">
+        <article><span>01</span><strong>Portfolio-first discovery</strong><p>Profiles centre creative work, story, location, specialty, and collaboration intent.</p></article>
+        <article><span>02</span><strong>Static and lightweight</strong><p>The public site loads on GitHub Pages without accounts, paid APIs, or backend dependencies.</p></article>
+        <article><span>03</span><strong>Built for cultural visibility</strong><p>The platform highlights African creative expression across fashion, styling, and visual art.</p></article>
+      </div>
+    </section>
+
     <section class="section" id="categories">
       <div class="container">
         <div class="section-head">
@@ -80,6 +94,21 @@
           <a class="text-link" href="#explore">View directory</a>
         </div>
         <div class="featured-track" id="featuredTrack" aria-label="Featured creative carousel"></div>
+      </div>
+    </section>
+
+    <section class="section journey-section" id="how-it-works">
+      <div class="container">
+        <div class="section-head row-head">
+          <div><p class="eyebrow">How it works</p><h2>From discovery to collaboration, without friction.</h2></div>
+          <p class="section-note">A clearer journey helps visitors understand the value before they browse deeply.</p>
+        </div>
+        <div class="journey-grid">
+          <article><span>Discover</span><h3>Find creative talent</h3><p>Search by name, city, category, specialty, or visual direction.</p></article>
+          <article><span>Explore</span><h3>Read the profile</h3><p>Open creative profiles, review work highlights, and understand collaboration interests.</p></article>
+          <article><span>Create</span><h3>Shape an idea</h3><p>Use Design Corner to test garment concepts, texture, colour, and direction.</p></article>
+          <article><span>Connect</span><h3>Start the conversation</h3><p>Submit interest, copy profile links, or follow the creative’s social/contact path.</p></article>
+        </div>
       </div>
     </section>
 
@@ -179,6 +208,20 @@
               </div>
             </div>
             <div class="preview-frame premium-preview" id="designPreview" aria-label="Live garment concept preview"></div>
+            <div class="studio-reference-grid" aria-label="Design reference board">
+              <article class="reference-tile large-reference">
+                <img id="designReferenceImage" src="assets/images/luxury-evening-blazer.png" alt="High definition garment reference" />
+                <div><span>Reference image</span><strong id="designReferenceLabel">Statement Outerwear</strong></div>
+              </article>
+              <article class="reference-tile">
+                <div class="texture-loupe" id="textureLoupe"></div>
+                <div><span>Fabric close-up</span><strong id="textureLabel">Structured Cotton</strong></div>
+              </article>
+              <article class="reference-tile spec-tile">
+                <span>Studio notes</span>
+                <strong id="studioSpecLine">Shape, fabric, trim and finish direction.</strong>
+              </article>
+            </div>
             <div class="design-actions">
               <button class="btn primary" id="saveDesign" type="button">Save Design</button>
               <button class="btn secondary" id="loadDesign" type="button">Load Last Design</button>

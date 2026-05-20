@@ -277,6 +277,18 @@ function getEstimatedPriceRange(garment){
   return map[garment] || "To be refined";
 }
 
+function getGarmentReference(garment){
+  const map = {
+    "T-shirt": { image:"assets/images/streetwear-geometric-set.png", label:"Streetwear jersey reference" },
+    "Shirt": { image:"assets/images/coastal-print-shirt.png", label:"Resort shirt reference" },
+    "Jeans": { image:"assets/images/streetwear-geometric-set.png", label:"Denim proportion reference" },
+    "Jacket": { image:"assets/images/luxury-evening-blazer.png", label:"Statement outerwear reference" },
+    "Dress": { image:"assets/images/resortwear-wrap-dress.png", label:"Occasionwear drape reference" },
+    "Hoodie": { image:"assets/images/utility-jacket.png", label:"Lifestyle outerwear reference" }
+  };
+  return map[garment] || map.Jacket;
+}
+
 function getDesignColourValue(name){
   const colour = designCornerConfig.colours.find(item => item.name === name);
   return colour ? colour.value : "#a85a2b";
@@ -401,6 +413,13 @@ function updateDesignPreview(){
   $("#summaryPattern").textContent = state.pattern;
   $("#summaryCategory").textContent = state.suggestedCategory;
   $("#summaryPrice").textContent = state.estimatedPriceRange;
+  const reference = getGarmentReference(state.garment);
+  $("#designReferenceImage").src = reference.image;
+  $("#designReferenceImage").alt = `${state.garment} high definition reference`;
+  $("#designReferenceLabel").textContent = reference.label;
+  $("#textureLabel").textContent = state.material;
+  $("#textureLoupe").className = `texture-loupe ${state.material.toLowerCase().replace(/\s+/g,"-")}`;
+  $("#studioSpecLine").textContent = `${state.garment} / ${state.colour} / ${state.material} / ${state.pattern}`;
   const score = calculateCreativeReadiness(state);
   $("#readinessText").textContent = `${score}%`;
   $("#readinessFill").style.setProperty("--demand", `${score}%`);
